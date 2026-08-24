@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Newsreader, IBM_Plex_Mono } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import "../../globals.css";
 import { SiteHeader } from "@/components/site-header";
@@ -66,6 +67,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
         <SiteHeader lang={lang} dict={dict} />
         <main className="flex-1">{children}</main>
         <SiteFooter dict={dict.footer} />
+        <SpeedInsights />
       </body>
     </html>
   );
