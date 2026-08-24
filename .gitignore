@@ -23,6 +23,7 @@
 *.pem
 *.md
 !README.md
+.neon
 
 # debug
 npm-debug.log*
