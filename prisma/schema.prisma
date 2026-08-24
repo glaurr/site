@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Project {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  // Translated content lives in columns rather than a separate table: two
+  // languages, no joins, and the admin form is two tabs over one record.
+  titleEn   String
+  titleRo   String
+  summaryEn String
+  summaryRo String
+  bodyEn    String @db.Text
+  bodyRo    String @db.Text
+
+  role      String
+  startDate DateTime
+  endDate   DateTime?
+
+  tags String[]
+
+  liveUrl String?
+  repoUrl String?
+
+  published Boolean @default(false)
+  sortOrder Int     @default(0)
+
+  images ProjectImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, sortOrder])
+}
+
+model ProjectImage {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  url String
+  // Required on purpose. An image without a description is not publishable.
+  alt String
+
+  sortOrder Int @default(0)
+
+  @@index([projectId, sortOrder])
+}
+
+// Single-row-per-key store for the bits of the site that are text rather than records.
+model SiteContent {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

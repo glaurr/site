@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+
+  --paper: #faf8f3;
+  --paper-sunk: #f2eee5;
+  --ink: #16140f;
+  --ink-soft: #57524a;
+  --rule: #ddd6c8;
+  --accent: #a8442a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --paper: #131210;
+    --paper-sunk: #1b1917;
+    --ink: #ece6da;
+    --ink-soft: #9a938a;
+    --rule: #302c26;
+    --accent: #e07a58;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: #131210;
+  --paper-sunk: #1b1917;
+  --ink: #ece6da;
+  --ink-soft: #9a938a;
+  --rule: #302c26;
+  --accent: #e07a58;
+}
+
+
+/*  utility classes */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-sunk: var(--paper-sunk);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+
+  --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  --text-display: 3.25rem;
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.022em;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Keyboard focus must always be visible — accessibility requirement, and
+     the browser default ring disappears against this palette */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--paper);
+  }
+}
+
+@layer components {
+  /* Small uppercase mono labels — the recurring "print" element of the site:
+     nav items, dates, tags, field labels. */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /*
+    Long-form Markdown output
+  */
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+    margin-top: 2.25em;
+  }
+
+  .prose h3 {
+    font-size: 1.175rem;
+    margin-top: 1.75em;
+  }
+
+  .prose a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.25em;
+  }
+
+  .prose ul {
+    list-style: square;
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose li + li {
+    margin-top: 0.4em;
+  }
+
+  .prose blockquote {
+    border-left: 2px solid var(--rule);
+    padding-left: 1.25em;
+    color: var(--ink-soft);
+  }
+
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background-color: var(--paper-sunk);
+    padding: 0.15em 0.35em;
+  }
+
+  .prose pre {
+    background-color: var(--paper-sunk);
+    padding: 1em 1.25em;
+    overflow-x: auto;
+  }
+
+  .prose pre code {
+    background: none;
+    padding: 0;
+  }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+  }
+
+  .prose th,
+  .prose td {
+    border-bottom: 1px solid var(--rule);
+    padding: 0.5em 0.75em 0.5em 0;
+    text-align: left;
+  }
+
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  /*
+    the theme shown is the one that would be applied;
+    this is decided in css not react
+  */
+  [data-show-in="dark"] {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) [data-show-in="dark"] {
+      display: inline;
+    }
+
+    :root:not([data-theme="light"]) [data-show-in="light"] {
+      display: none;
+    }
+  }
+
+  :root[data-theme="dark"] [data-show-in="dark"] {
+    display: inline;
+  }
+
+  :root[data-theme="dark"] [data-show-in="light"] {
+    display: none;
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "projects": "Projects",
+    "about": "About",
+    "microapps": "Microapps"
+  },
+  "home": {
+    "role": "Developer",
+    "intro": "Junior Developer with a passion for creating web applications and learning new technologies. This site works as a showcase of my skills and also as a presentation site.",
+    "selectedProjects": "Selected projects",
+    "viewAll": "All projects",
+    "empty": "Projects are being written up. Check back shortly."
+  },
+  "projects": {
+    "title": "Projects",
+    "role": "Role",
+    "period": "Period",
+    "present": "Present",
+    "live": "Live site",
+    "repo": "Source",
+    "back": "All projects",
+    "empty": "Nothing published yet."
+  },
+  "about": {
+    "title": "About",
+    "placeholder": "This page is written from the admin panel."
+  },
+  "microapps": {
+    "title": "Microapps",
+    "placeholder": "No microapps uploaded yet."
+  },
+  "theme": {
+    "toggle": "Switch between light and dark",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "footer": {
+    "name": "Popescu Laurențiu-Georgian",
+    "bio": "Junior Developer with a passion for creating web applications and learning new technologies. This site works as a showcase of my skills and also as a presentation site.",
+    "categories": {
+      "nav": "Navigation",
+      "socials": "Socials"
+    },
+    "links": {
+      "projects": "Projects",
+      "about": "About",
+      "microapps": "Microapps",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "email": "Email",
+      "instagram": "Instagram",
+      "steam": "Steam"
+    },
+    "copyright": "All rights reserved.",
+    "builtBy": "Built by hand using Next.js"
+  }
+}

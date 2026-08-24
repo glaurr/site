@@ -1,0 +1,57 @@
+{
+  "nav": {
+    "projects": "Proiecte",
+    "about": "Despre",
+    "microapps": "Microaplicații"
+  },
+  "home": {
+    "role": "Dezvoltator",
+    "intro": "Junior Developer cu pasiune pentru crearea de aplicații web și învățarea de noi tehnologii. Acest site funcționează ca o prezentare a cunoștințelor mele și ca un portofoliu.",
+    "selectedProjects": "Proiecte selectate",
+    "viewAll": "Toate proiectele",
+    "empty": "Proiectele sunt în curs de redactare. Revino în curând."
+  },
+  "projects": {
+    "title": "Proiecte",
+    "role": "Rol",
+    "period": "Perioadă",
+    "present": "Prezent",
+    "live": "Site live",
+    "repo": "Cod sursă",
+    "back": "Toate proiectele",
+    "empty": "Niciun proiect publicat încă."
+  },
+  "about": {
+    "title": "Despre",
+    "placeholder": "Această pagină se scrie din panoul de administrare."
+  },
+  "microapps": {
+    "title": "Microaplicații",
+    "placeholder": "Nicio aplicație încărcată încă."
+  },
+  "theme": {
+    "toggle": "Comută între temă deschisă și întunecată",
+    "light": "Deschis",
+    "dark": "Întunecat"
+  },
+  "footer": {
+    "name": "Popescu Laurențiu-Georgian",
+    "bio": "Junior Developer cu pasiune pentru crearea de aplicații web și învățarea de noi tehnologii. Acest site funcționează ca o prezentare a cunoștințelor mele și ca un portofoliu.",
+    "categories": {
+      "nav": "Navigare",
+      "socials": "Rețele Sociale"
+    },
+    "links": {
+      "projects": "Proiecte",
+      "about": "Despre",
+      "microapps": "Microaplicații",
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "email": "Email",
+      "instagram": "Instagram",
+      "steam": "Steam"
+    },
+    "copyright": "Toate drepturile rezervate.",
+    "builtBy": "Construit manual în Next.js"
+  }
+}
