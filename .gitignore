@@ -21,8 +21,6 @@
 # misc
 .DS_Store
 *.pem
-*.md
-!README.md
 .neon
 
 # debug
