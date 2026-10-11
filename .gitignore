@@ -22,6 +22,8 @@
 .DS_Store
 *.pem
 .neon
+*.md
+!.README.md
 
 # debug
 npm-debug.log*
