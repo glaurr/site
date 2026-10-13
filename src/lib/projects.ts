@@ -62,6 +62,11 @@ export async function getAllProjectsForAdmin() {
   });
 }
 
+// no `published` filter here: the admin edits drafts too
+export async function getProjectForAdmin(id: string) {
+  return prisma.project.findUnique({ where: { id } });
+}
+
 export async function getPublishedSlugs(): Promise<string[]> {
   const projects = await prisma.project.findMany({
     where: { published: true },
