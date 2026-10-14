@@ -20,6 +20,9 @@ export default async function AdminPanelLayout({
             <Link href="/admin" className="label hover:text-accent">
               Projects
             </Link>
+            <Link href="/admin/about" className="label hover:text-accent">
+              About
+            </Link>
             <Link href="/en" className="label hover:text-accent">
               View site
             </Link>

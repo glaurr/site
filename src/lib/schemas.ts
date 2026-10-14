@@ -63,3 +63,24 @@ export const projectSchema = z
   });
 
 export type ProjectValues = z.infer<typeof projectSchema>;
+
+/*
+  The About page: Markdown text plus a short description, in both languages.
+  The description is what search results and link previews show under the
+  title; past about 160 characters they cut it off.
+*/
+const description = (language: string) =>
+  z
+    .string()
+    .trim()
+    .min(1, `Enter the ${language} description`)
+    .max(160, "Keep it under 160 characters");
+
+export const aboutSchema = z.object({
+  bodyEn: z.string().trim().min(1, "Enter the English text"),
+  bodyRo: z.string().trim().min(1, "Enter the Romanian text"),
+  descriptionEn: description("English"),
+  descriptionRo: description("Romanian"),
+});
+
+export type AboutValues = z.infer<typeof aboutSchema>;

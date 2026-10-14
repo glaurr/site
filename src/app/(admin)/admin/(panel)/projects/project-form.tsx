@@ -6,25 +6,23 @@
   there is an existing project to update.
 */
 
-import { useState, type ComponentProps, type ReactNode } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { useForm, type FieldErrors } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { projectSchema, type ProjectValues } from "@/lib/schemas";
+import {
+  LanguageTabs,
+  TextArea,
+  TextField,
+  languages,
+  useLanguageTabs,
+} from "../form-fields";
 import { createProject, updateProject } from "./actions";
 
-/*
-  `suffix` is how a language shows up in a field name: titleEn, titleRo. The
-  two language tabs are the same three fields, so they are drawn from this
-  list instead of being written out twice.
-*/
-const languages = [
-  { code: "en", suffix: "En", name: "English" },
-  { code: "ro", suffix: "Ro", name: "Romanian" },
-] as const;
-
-type LanguageCode = (typeof languages)[number]["code"];
+// the fields that exist once per language: titleEn, titleRo, ...
+const translated = ["title", "summary", "body"] as const;
 
 const emptyProject: ProjectValues = {
   slug: "",
@@ -44,91 +42,6 @@ const emptyProject: ProjectValues = {
   sortOrder: 0,
 };
 
-type FieldProps = {
-  label: string;
-  error?: string;
-  hint?: string;
-};
-
-// label, then the input, then either the error or the hint underneath
-function Field({
-  id,
-  label,
-  error,
-  hint,
-  children,
-}: FieldProps & { id?: string; children: ReactNode }) {
-  return (
-    <div>
-      <label htmlFor={id} className="label">
-        {label}
-      </label>
-      {children}
-      {error ? (
-        <p id={`${id}-error`} className="label mt-2 text-accent">
-          {error}
-        </p>
-      ) : (
-        hint && (
-          <p id={`${id}-hint`} className="label mt-2">
-            {hint}
-          </p>
-        )
-      )}
-    </div>
-  );
-}
-
-// ties the input to whichever message is showing, for screen readers
-function describedBy(id?: string, error?: string, hint?: string) {
-  if (error) return `${id}-error`;
-  if (hint) return `${id}-hint`;
-  return undefined;
-}
-
-function TextField({
-  label,
-  error,
-  hint,
-  ...input
-}: FieldProps & ComponentProps<"input">) {
-  const id = input.name;
-
-  return (
-    <Field id={id} label={label} error={error} hint={hint}>
-      <input
-        id={id}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy(id, error, hint)}
-        className="mt-2 w-full border-b border-rule bg-transparent py-2 outline-none focus:border-accent"
-        {...input}
-      />
-    </Field>
-  );
-}
-
-function TextArea({
-  label,
-  error,
-  hint,
-  className = "",
-  ...textarea
-}: FieldProps & ComponentProps<"textarea">) {
-  const id = textarea.name;
-
-  return (
-    <Field id={id} label={label} error={error} hint={hint}>
-      <textarea
-        id={id}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy(id, error, hint)}
-        className={`mt-2 block w-full border border-rule bg-transparent p-3 outline-none focus:border-accent ${className}`}
-        {...textarea}
-      />
-    </Field>
-  );
-}
-
 export function ProjectForm({
   id,
   defaultValues = emptyProject,
@@ -137,7 +50,7 @@ export function ProjectForm({
   defaultValues?: ProjectValues;
 }) {
   const [serverError, setServerError] = useState("");
-  const [language, setLanguage] = useState<LanguageCode>("en");
+  const { language, setLanguage, onInvalid } = useLanguageTabs(translated);
 
   const {
     register,
@@ -148,17 +61,6 @@ export function ProjectForm({
     defaultValues,
   });
 
-  function hasErrors(
-    fieldErrors: FieldErrors<ProjectValues>,
-    suffix: "En" | "Ro",
-  ) {
-    return Boolean(
-      fieldErrors[`title${suffix}`] ||
-      fieldErrors[`summary${suffix}`] ||
-      fieldErrors[`body${suffix}`],
-    );
-  }
-
   async function onSubmit(values: ProjectValues) {
     setServerError("");
     const result = id
@@ -167,44 +69,18 @@ export function ProjectForm({
     if (result.error) setServerError(result.error);
   }
 
-  /*
-    Runs when the browser-side check fails. A mistake in the language that is
-    currently hidden would be invisible, so switch to the tab that has one.
-  */
-  function onInvalid(fieldErrors: FieldErrors<ProjectValues>) {
-    const current = languages.find((item) => item.code === language);
-    if (current && hasErrors(fieldErrors, current.suffix)) return;
-
-    const failed = languages.find((item) =>
-      hasErrors(fieldErrors, item.suffix),
-    );
-    if (failed) setLanguage(failed.code);
-  }
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit, onInvalid)}
       noValidate
       className="mt-10"
     >
-      <div className="flex gap-6 border-b border-rule">
-        {languages.map(({ code, suffix, name }) => (
-          <button
-            key={code}
-            type="button"
-            aria-pressed={language === code}
-            onClick={() => setLanguage(code)}
-            className={`label -mb-px cursor-pointer border-b py-3 ${
-              language === code
-                ? "border-accent text-accent"
-                : "border-transparent hover:text-accent"
-            }`}
-          >
-            {name}
-            {hasErrors(errors, suffix) && " — has errors"}
-          </button>
-        ))}
-      </div>
+      <LanguageTabs
+        fields={translated}
+        errors={errors}
+        language={language}
+        onSelect={setLanguage}
+      />
 
       {/*
         Both languages stay in the page the whole time and one is hidden, so
