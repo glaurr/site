@@ -31,7 +31,21 @@
     "apps": {
       "cryptoWatchlist": {
         "title": "Listă de urmărire crypto",
-        "summary": "Prețuri actuale, variația pe 24 de ore și tendința pe 7 zile pentru monedele alese de tine. Lista rămâne salvată în acest browser."
+        "summary": "Prețuri actuale, variația pe 24 de ore și tendința pe 7 zile pentru monedele alese de tine. Lista rămâne salvată în acest browser.",
+        "asOf": "Situația la",
+        "caption": "Prețurile monedelor în dolari americani",
+        "columns": {
+          "coin": "Monedă",
+          "price": "Preț",
+          "change24h": "24 h",
+          "trend7d": "7 zile"
+        },
+        "trendLabel": "Variația pe 7 zile",
+        "loading": "Se încarcă prețurile",
+        "error": "Prețurile nu au putut fi încărcate.",
+        "retry": "Încearcă din nou",
+        "note": "Prețuri în dolari americani, actualizate la fiecare 5 minute.",
+        "source": "Date furnizate de"
       }
     }
   },

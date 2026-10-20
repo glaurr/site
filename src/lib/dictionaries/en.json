@@ -31,7 +31,21 @@
     "apps": {
       "cryptoWatchlist": {
         "title": "Crypto watchlist",
-        "summary": "Current prices, 24-hour change and a 7-day trend for the coins you choose. Your list stays in this browser."
+        "summary": "Current prices, 24-hour change and a 7-day trend for the coins you choose. Your list stays in this browser.",
+        "asOf": "As of",
+        "caption": "Coin prices in US dollars",
+        "columns": {
+          "coin": "Coin",
+          "price": "Price",
+          "change24h": "24h",
+          "trend7d": "7d"
+        },
+        "trendLabel": "7-day change",
+        "loading": "Loading prices",
+        "error": "Prices could not be loaded.",
+        "retry": "Try again",
+        "note": "Prices in US dollars, refreshed every 5 minutes.",
+        "source": "Data provided by"
       }
     }
   },

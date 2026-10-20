@@ -31,7 +31,27 @@ export type Coin = {
 export type Markets = {
   updatedAt: string;
   coins: Coin[];
+  defaultIds: string[];
 };
+
+const DEFAULT_COUNT = 10;
+const FULL_WEEK_POINTS = 40;
+
+/*
+  The list a visitor sees before choosing their own: the ten largest coins by
+  market cap, minus the ones a chart says nothing about. Stablecoins sit at $1
+  all week, and coins missing a change or a full week of prices would show
+  gaps. Both are spotted from the data, so no list of names needs upkeep.
+*/
+function isDefaultCandidate(coin: Coin): boolean {
+  const complete =
+    coin.change24h !== null &&
+    coin.change7d !== null &&
+    coin.sparkline.length >= FULL_WEEK_POINTS;
+  const pegged = coin.sparkline.every((point) => Math.abs(point - 1) < 0.03);
+
+  return complete && !pegged;
+}
 
 /*
   Only the fields we use are listed, and zod drops the rest — about 1 MB from
@@ -88,17 +108,23 @@ export async function getMarkets(): Promise<Markets> {
     .filter((value) => value != null)
     .reduce((newest, value) => (value > newest ? value : newest), "");
 
+  const trimmed: Coin[] = coins.map((coin) => ({
+    id: coin.id,
+    symbol: coin.symbol.toUpperCase(),
+    name: coin.name,
+    rank: coin.market_cap_rank ?? null,
+    price: coin.current_price,
+    change24h: coin.price_change_percentage_24h_in_currency ?? null,
+    change7d: coin.price_change_percentage_7d_in_currency ?? null,
+    sparkline: downsample(coin.sparkline_in_7d?.price ?? []),
+  }));
+
   return {
     updatedAt: updatedAt || new Date().toISOString(),
-    coins: coins.map((coin) => ({
-      id: coin.id,
-      symbol: coin.symbol.toUpperCase(),
-      name: coin.name,
-      rank: coin.market_cap_rank ?? null,
-      price: coin.current_price,
-      change24h: coin.price_change_percentage_24h_in_currency ?? null,
-      change7d: coin.price_change_percentage_7d_in_currency ?? null,
-      sparkline: downsample(coin.sparkline_in_7d?.price ?? []),
-    })),
+    coins: trimmed,
+    defaultIds: trimmed
+      .filter(isDefaultCandidate)
+      .slice(0, DEFAULT_COUNT)
+      .map((coin) => coin.id),
   };
 }
