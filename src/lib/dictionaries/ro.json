@@ -27,7 +27,13 @@
   },
   "microapps": {
     "title": "Microaplicații",
-    "placeholder": "Nicio aplicație încărcată încă."
+    "placeholder": "Nicio aplicație încărcată încă.",
+    "apps": {
+      "cryptoWatchlist": {
+        "title": "Listă de urmărire crypto",
+        "summary": "Prețuri actuale, variația pe 24 de ore și tendința pe 7 zile pentru monedele alese de tine. Lista rămâne salvată în acest browser."
+      }
+    }
   },
   "theme": {
     "toggle": "Comută între temă deschisă și întunecată",
