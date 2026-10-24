@@ -15,13 +15,14 @@ type Labels = Dictionary["microapps"]["apps"]["cryptoWatchlist"];
 type State =
   | { status: "loading" }
   | { status: "error" }
-  | { status: "ready"; markets: Markets; refreshFailed: boolean };
+  | { status: "ready"; markets: Markets; outdated: boolean };
 
 type Row = { id: string; coin: Coin | undefined };
 
 const PLACEHOLDER_ROWS = 10;
 const REFRESH_MS = 5 * 60 * 1000;
 const CHECK_MS = 60 * 1000;
+const OUTDATED_MS = 15 * 60 * 1000;
 
 /*
   Prices are fetched in the browser, not at build time: they go stale in
@@ -32,13 +33,30 @@ const CHECK_MS = 60 * 1000;
   while the tab is visible; coming back to the tab catches up at once. A
   failed refresh keeps the rows on screen and waits the full 5 minutes
   before trying again, so an outage is not met with a burst of retries.
+  During an outage the server keeps answering with its last copy, so the
+  rows are also marked out of date once their prices are 15 minutes old.
 */
 export function Watchlist({ lang, labels }: { lang: Locale; labels: Labels }) {
   const [state, setState] = useState<State>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
   const [announcement, setAnnouncement] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const focusAfterRender = useRef<{ coin: string | undefined } | null>(null);
   const savedIds = useSavedCoins();
+
+  useEffect(() => {
+    const target = focusAfterRender.current;
+    if (target === null) return;
+    focusAfterRender.current = null;
+
+    const button = target.coin
+      ? tableRef.current?.querySelector<HTMLButtonElement>(
+          `button[data-coin="${CSS.escape(target.coin)}"]`,
+        )
+      : null;
+    (button ?? searchRef.current)?.focus();
+  });
 
   useEffect(() => {
     let controller = new AbortController();
@@ -51,12 +69,15 @@ export function Watchlist({ lang, labels }: { lang: Locale; labels: Labels }) {
       lastAttempt = Date.now();
 
       fetchMarkets(signal).then(
-        (markets) => setState({ status: "ready", markets, refreshFailed: false }),
+        (markets) => {
+          const age = Date.now() - Date.parse(markets.updatedAt);
+          setState({ status: "ready", markets, outdated: age > OUTDATED_MS });
+        },
         () => {
           if (signal.aborted) return;
           setState((current) =>
             current.status === "ready"
-              ? { ...current, refreshFailed: true }
+              ? { ...current, outdated: true }
               : { status: "error" },
           );
         },
@@ -106,19 +127,24 @@ export function Watchlist({ lang, labels }: { lang: Locale; labels: Labels }) {
   function add(coin: Coin) {
     if (ids.includes(coin.id) || ids.length >= MAX_COINS) return;
     saveCoins([...ids, coin.id]);
-    setAnnouncement(labels.added.replace("{name}", coin.name));
+    setAnnouncement(labels.added.replace("{name}", () => coin.name));
   }
 
   function remove(id: string, name: string) {
-    saveCoins(ids.filter((other) => other !== id));
-    setAnnouncement(labels.removed.replace("{name}", name));
-    searchRef.current?.focus();
+    const index = ids.indexOf(id);
+    const rest = ids.filter((other) => other !== id);
+
+    saveCoins(rest);
+    setAnnouncement(labels.removed.replace("{name}", () => name));
+    focusAfterRender.current = { coin: rest[index] ?? rest[index - 1] };
   }
 
   function reset() {
     forgetCoins();
     setAnnouncement(labels.resetDone);
-    searchRef.current?.focus();
+    focusAfterRender.current = {
+      coin: ready ? state.markets.defaultIds[0] : undefined,
+    };
   }
 
   return (
@@ -154,7 +180,7 @@ export function Watchlist({ lang, labels }: { lang: Locale; labels: Labels }) {
         )}
       </div>
 
-      {ready && state.refreshFailed && (
+      {ready && state.outdated && (
         <p role="status" className="label mt-2 text-accent">
           {labels.stale}{" "}
           <button
@@ -172,7 +198,7 @@ export function Watchlist({ lang, labels }: { lang: Locale; labels: Labels }) {
           {labels.empty}
         </p>
       ) : (
-        <table className="mt-4 w-full" aria-busy={!ready}>
+        <table ref={tableRef} className="mt-4 w-full" aria-busy={!ready}>
           <caption className="sr-only">{labels.caption}</caption>
           <thead>
             <tr className="label">
@@ -198,7 +224,7 @@ export function Watchlist({ lang, labels }: { lang: Locale; labels: Labels }) {
             {ready
               ? rows.map(({ id, coin }) => (
                   <tr key={id} className="group border-t border-rule">
-                    <th scope="row" className="py-4 pr-4 text-left font-normal">
+                    <td className="py-4 pr-4">
                       <span
                         className={`block leading-snug ${coin ? "" : "text-ink-soft"}`}
                       >
@@ -210,17 +236,18 @@ export function Watchlist({ lang, labels }: { lang: Locale; labels: Labels }) {
                         </span>
                         <button
                           type="button"
+                          data-coin={id}
                           onClick={() => remove(id, coin ? coin.name : id)}
                           aria-label={labels.removeLabel.replace(
                             "{name}",
-                            coin ? coin.name : id,
+                            () => (coin ? coin.name : id),
                           )}
                           className="label -my-1.5 cursor-pointer py-1.5 hover:text-accent pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100 pointer-fine:focus-visible:opacity-100"
                         >
                           {labels.remove}
                         </button>
                       </span>
-                    </th>
+                    </td>
                     <td className="py-4 pl-4 text-right font-mono text-sm tabular-nums">
                       {coin ? formatPrice(coin.price, lang) : "—"}
                     </td>

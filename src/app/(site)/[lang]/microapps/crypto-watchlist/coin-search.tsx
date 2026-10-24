@@ -31,12 +31,13 @@ export function CoinSearch({
   const id = useId();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(-1);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const matches = useMemo(
     () => search(coins, query, exclude),
     [coins, query, exclude],
   );
+  const active = matches.findIndex((coin) => coin.id === activeId);
 
   const searching = open && query.trim() !== "" && !full;
   const showList = searching && matches.length > 0;
@@ -47,19 +48,22 @@ export function CoinSearch({
   function choose(coin: Coin) {
     onSelect(coin);
     setQuery("");
-    setActive(-1);
+    setActiveId(null);
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.nativeEvent.isComposing) return;
+
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setOpen(true);
-      setActive((index) => Math.min(index + 1, matches.length - 1));
+      const next = matches[Math.min(active + 1, matches.length - 1)];
+      if (next) setActiveId(next.id);
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
-      setActive((index) => Math.max(index - 1, -1));
+      setActiveId(active > 0 ? matches[active - 1].id : null);
     } else if (event.key === "Enter") {
-      const coin = matches[active] ?? matches[0];
+      const coin = active >= 0 ? matches[active] : matches[0];
       if (showList && coin) {
         event.preventDefault();
         choose(coin);
@@ -67,7 +71,7 @@ export function CoinSearch({
     } else if (event.key === "Escape") {
       if (showList) setOpen(false);
       else setQuery("");
-      setActive(-1);
+      setActiveId(null);
     }
   }
 
@@ -99,7 +103,7 @@ export function CoinSearch({
           onChange={(event) => {
             setQuery(event.target.value);
             setOpen(true);
-            setActive(-1);
+            setActiveId(null);
           }}
           onFocus={() => setOpen(true)}
           onBlur={() => setOpen(false)}
@@ -107,21 +111,22 @@ export function CoinSearch({
           className="mt-2 w-full border-b border-ink-soft bg-transparent py-2 outline-none placeholder:text-ink-soft focus:border-accent"
         />
 
-        {showList && (
-          <ul
-            id={listId}
-            role="listbox"
-            aria-label={labels.label}
-            className="absolute inset-x-0 top-full z-10 mt-1 border border-rule bg-paper"
-          >
-            {matches.map((coin, index) => (
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label={labels.label}
+          hidden={!showList}
+          className="absolute inset-x-0 top-full z-10 mt-1 border border-rule bg-paper"
+        >
+          {showList &&
+            matches.map((coin, index) => (
               <li
                 key={coin.id}
                 id={optionId(index)}
                 role="option"
                 aria-selected={index === active}
                 onMouseDown={(event) => event.preventDefault()}
-                onMouseMove={() => setActive(index)}
+                onMouseMove={() => setActiveId(coin.id)}
                 onClick={() => choose(coin)}
                 className={`flex cursor-pointer items-baseline justify-between gap-4 px-3 py-2 ${
                   index === active ? "bg-paper-sunk text-accent" : ""
@@ -131,8 +136,7 @@ export function CoinSearch({
                 <span className="label">{coin.symbol}</span>
               </li>
             ))}
-          </ul>
-        )}
+        </ul>
       </div>
 
       <p id={hintId} aria-live="polite" className="label mt-2">

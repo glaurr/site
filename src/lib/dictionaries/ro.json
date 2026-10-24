@@ -61,7 +61,7 @@
         "reset": "Revino la top 10",
         "resetDone": "Lista a revenit la top 10.",
         "empty": "Lista ta e goală. Caută mai sus o monedă ca s-o adaugi.",
-        "unavailable": "Nu mai e în top 250"
+        "unavailable": "Fără preț momentan"
       }
     }
   },

@@ -61,7 +61,7 @@
         "reset": "Reset to top 10",
         "resetDone": "List reset to the top 10.",
         "empty": "Your list is empty. Search for a coin above to add it.",
-        "unavailable": "Not in the top 250 right now"
+        "unavailable": "No price right now"
       }
     }
   },

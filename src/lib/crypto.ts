@@ -71,16 +71,21 @@ export async function getMarkets(): Promise<Markets> {
   const cached = await requestMarkets({
     next: { revalidate: MARKETS_REVALIDATE_SECONDS },
   });
-  if (Date.now() - Date.parse(cached.updatedAt) < MAX_AGE_MS) return cached;
+  if (age(cached) < MAX_AGE_MS) return parseMarkets(cached);
 
   try {
-    return await requestMarkets({ cache: "no-store" });
+    return await parseMarkets(await requestMarkets({ cache: "no-store" }));
   } catch {
-    return cached;
+    return parseMarkets(cached);
   }
 }
 
-async function requestMarkets(caching: RequestInit): Promise<Markets> {
+function age(response: Response): number {
+  const fetchedAt = Date.parse(response.headers.get("date") ?? "");
+  return Number.isNaN(fetchedAt) ? 0 : Date.now() - fetchedAt;
+}
+
+async function requestMarkets(caching: RequestInit): Promise<Response> {
   const apiKey = process.env.COINGECKO_API_KEY;
 
   const response = await fetch(MARKETS_URL, {
@@ -93,6 +98,10 @@ async function requestMarkets(caching: RequestInit): Promise<Markets> {
     throw new Error(`CoinGecko responded with ${response.status}`);
   }
 
+  return response;
+}
+
+async function parseMarkets(response: Response): Promise<Markets> {
   const body: unknown = await response.json();
   if (!Array.isArray(body)) {
     throw new Error("CoinGecko returned something other than a list");
