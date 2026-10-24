@@ -20,7 +20,7 @@ export function SiteHeader({
           {siteName}
         </Link>
 
-        <nav className="flex items-baseline gap-6">
+        <nav className="flex flex-wrap items-baseline gap-x-6 gap-y-3">
           <Link href={`/${lang}/projects`} className="label hover:text-accent">
             {dict.nav.projects}
           </Link>
