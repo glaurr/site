@@ -43,9 +43,25 @@
         "trendLabel": "Variația pe 7 zile",
         "loading": "Se încarcă prețurile",
         "error": "Prețurile nu au putut fi încărcate.",
+        "stale": "Prețurile nu au putut fi actualizate și pot fi depășite.",
         "retry": "Încearcă din nou",
         "note": "Prețuri în dolari americani, actualizate la fiecare 5 minute.",
-        "source": "Date furnizate de"
+        "source": "Date furnizate de",
+        "search": {
+          "label": "Adaugă o monedă",
+          "placeholder": "Nume sau simbol",
+          "hint": "Caută printre cele mai mari 250 de monede după capitalizare.",
+          "noMatch": "Nicio potrivire printre cele mai mari 250 de monede.",
+          "full": "Lista e plină: {max} monede. Șterge una ca să adaugi alta."
+        },
+        "remove": "Șterge",
+        "removeLabel": "Șterge {name}",
+        "added": "Ai adăugat {name}.",
+        "removed": "Ai șters {name}.",
+        "reset": "Revino la top 10",
+        "resetDone": "Lista a revenit la top 10.",
+        "empty": "Lista ta e goală. Caută mai sus o monedă ca s-o adaugi.",
+        "unavailable": "Nu mai e în top 250"
       }
     }
   },

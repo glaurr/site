@@ -43,9 +43,25 @@
         "trendLabel": "7-day change",
         "loading": "Loading prices",
         "error": "Prices could not be loaded.",
+        "stale": "Prices could not be refreshed and may be out of date.",
         "retry": "Try again",
         "note": "Prices in US dollars, refreshed every 5 minutes.",
-        "source": "Data provided by"
+        "source": "Data provided by",
+        "search": {
+          "label": "Add a coin",
+          "placeholder": "Name or symbol",
+          "hint": "Search the 250 largest coins by market cap.",
+          "noMatch": "No match among the 250 largest coins.",
+          "full": "Your list is full at {max} coins. Remove one to add another."
+        },
+        "remove": "Remove",
+        "removeLabel": "Remove {name}",
+        "added": "{name} added.",
+        "removed": "{name} removed.",
+        "reset": "Reset to top 10",
+        "resetDone": "List reset to the top 10.",
+        "empty": "Your list is empty. Search for a coin above to add it.",
+        "unavailable": "Not in the top 250 right now"
       }
     }
   },

@@ -37,12 +37,6 @@ export type Markets = {
 const DEFAULT_COUNT = 10;
 const FULL_WEEK_POINTS = 40;
 
-/*
-  The list a visitor sees before choosing their own: the ten largest coins by
-  market cap, minus the ones a chart says nothing about. Stablecoins sit at $1
-  all week, and coins missing a change or a full week of prices would show
-  gaps. Both are spotted from the data, so no list of names needs upkeep.
-*/
 function isDefaultCandidate(coin: Coin): boolean {
   const complete =
     coin.change24h !== null &&
@@ -53,11 +47,6 @@ function isDefaultCandidate(coin: Coin): boolean {
   return complete && !pegged;
 }
 
-/*
-  Only the fields we use are listed, and zod drops the rest — about 1 MB from
-  CoinGecko comes out as roughly 140 KB. Most numbers can be null for new or
-  thinly traded coins, so they are allowed to be.
-*/
 const upstreamCoinSchema = z.object({
   id: z.string(),
   symbol: z.string(),
@@ -76,12 +65,27 @@ function downsample(points: number[], step = 4): number[] {
     .map((point) => Number(point.toPrecision(5)));
 }
 
+const MAX_AGE_MS = 2 * MARKETS_REVALIDATE_SECONDS * 1000;
+
 export async function getMarkets(): Promise<Markets> {
+  const cached = await requestMarkets({
+    next: { revalidate: MARKETS_REVALIDATE_SECONDS },
+  });
+  if (Date.now() - Date.parse(cached.updatedAt) < MAX_AGE_MS) return cached;
+
+  try {
+    return await requestMarkets({ cache: "no-store" });
+  } catch {
+    return cached;
+  }
+}
+
+async function requestMarkets(caching: RequestInit): Promise<Markets> {
   const apiKey = process.env.COINGECKO_API_KEY;
 
   const response = await fetch(MARKETS_URL, {
+    ...caching,
     headers: apiKey ? { "x-cg-demo-api-key": apiKey } : undefined,
-    next: { revalidate: MARKETS_REVALIDATE_SECONDS },
     signal: AbortSignal.timeout(10_000),
   });
 
