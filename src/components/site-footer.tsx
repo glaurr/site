@@ -60,7 +60,7 @@ export function SiteFooter({ dict }: { dict: Dictionary['footer'] }) {
   };
 
   return (
-    <footer className="mt-24 border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-zinc-950" aria-labelledby="footer-heading">
+    <footer className="mt-24 border-t border-rule bg-paper-sunk" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
@@ -71,15 +71,15 @@ export function SiteFooter({ dict }: { dict: Dictionary['footer'] }) {
           
           {/* bio + icons */}
           <div className="space-y-6 md:col-span-1">
-            <Link href="/" className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <Link href="/" className="text-xl font-bold tracking-tight text-ink">
               {dict.name}
             </Link>
-            <p className="text-sm leading-6 text-gray-600 dark:text-gray-400">
+            <p className="text-sm leading-6 text-ink-soft">
               {dict.bio}
             </p>
             <div className="flex space-x-6">
               {socialIcons.map((item) => (
-                <a key={item.name} href={item.href} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                <a key={item.name} href={item.href} target="_blank" rel="noopener noreferrer" className="text-ink-soft hover:text-accent transition-colors">
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="h-6 w-6" aria-hidden="true" />
                 </a>
@@ -89,11 +89,11 @@ export function SiteFooter({ dict }: { dict: Dictionary['footer'] }) {
 
           {/* Internal Navigation */}
           <div className="md:col-span-1 md:pl-12">
-            <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">{dict.categories.nav}</h3>
+            <h3 className="text-sm font-semibold leading-6 text-ink">{dict.categories.nav}</h3>
             <ul role="list" className="mt-6 space-y-4">
               {footerNavigation.main.map((item) => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                  <Link href={item.href} className="text-sm leading-6 text-ink-soft hover:text-accent transition-colors">
                     {item.name}
                   </Link>
                 </li>
@@ -103,11 +103,11 @@ export function SiteFooter({ dict }: { dict: Dictionary['footer'] }) {
 
           {/* Socials List */}
           <div className="md:col-span-1">
-            <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-white">{dict.categories.socials}</h3>
+            <h3 className="text-sm font-semibold leading-6 text-ink">{dict.categories.socials}</h3>
             <ul role="list" className="mt-6 space-y-4">
               {footerNavigation.social.map((item) => (
                 <li key={item.name}>
-                  <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+                  <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-sm leading-6 text-ink-soft hover:text-accent transition-colors">
                     {item.name}
                   </a>
                 </li>
@@ -118,16 +118,16 @@ export function SiteFooter({ dict }: { dict: Dictionary['footer'] }) {
         </div>
         
         {/* Sub-footer Area */}
-        <div className="mt-16 border-t border-gray-900/10 dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
+        <div className="mt-16 border-t border-rule pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs leading-5 text-ink-soft">
             &copy; {new Date().getFullYear()} {dict.name}. {dict.copyright}
           </p>
           <div className="flex items-center gap-2">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gain opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-gain"></span>
             </span>
-            <p className="text-xs leading-5 text-gray-500 dark:text-gray-400 font-medium">
+            <p className="text-xs leading-5 text-ink-soft font-medium">
               {dict.builtBy}
             </p>
           </div>

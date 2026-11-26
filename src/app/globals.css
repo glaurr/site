@@ -9,6 +9,7 @@
   --ink-soft: #57524a;
   --rule: #ddd6c8;
   --accent: #a8442a;
+  --gain: #2f7a4b;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,6 +22,7 @@
     --ink-soft: #9a938a;
     --rule: #302c26;
     --accent: #e07a58;
+    --gain: #6cc08a;
   }
 }
 
@@ -33,6 +35,7 @@
   --ink-soft: #9a938a;
   --rule: #302c26;
   --accent: #e07a58;
+  --gain: #6cc08a;
 }
 
 
@@ -44,6 +47,7 @@
   --color-ink-soft: var(--ink-soft);
   --color-rule: var(--rule);
   --color-accent: var(--accent);
+  --color-gain: var(--gain);
 
   --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
